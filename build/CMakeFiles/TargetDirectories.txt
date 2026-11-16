@@ -1,0 +1,3 @@
+/workspaces/Renzo-SimCore/build/CMakeFiles/RenzoSimCore.dir
+/workspaces/Renzo-SimCore/build/CMakeFiles/edit_cache.dir
+/workspaces/Renzo-SimCore/build/CMakeFiles/rebuild_cache.dir
