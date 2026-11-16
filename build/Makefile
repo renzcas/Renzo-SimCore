@@ -129,6 +129,30 @@ RenzoSimCore/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/RenzoSimCore.dir/build.make CMakeFiles/RenzoSimCore.dir/build
 .PHONY : RenzoSimCore/fast
 
+src/Creature.o: src/Creature.cpp.o
+.PHONY : src/Creature.o
+
+# target to build an object file
+src/Creature.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RenzoSimCore.dir/build.make CMakeFiles/RenzoSimCore.dir/src/Creature.cpp.o
+.PHONY : src/Creature.cpp.o
+
+src/Creature.i: src/Creature.cpp.i
+.PHONY : src/Creature.i
+
+# target to preprocess a source file
+src/Creature.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RenzoSimCore.dir/build.make CMakeFiles/RenzoSimCore.dir/src/Creature.cpp.i
+.PHONY : src/Creature.cpp.i
+
+src/Creature.s: src/Creature.cpp.s
+.PHONY : src/Creature.s
+
+# target to generate assembly for a file
+src/Creature.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/RenzoSimCore.dir/build.make CMakeFiles/RenzoSimCore.dir/src/Creature.cpp.s
+.PHONY : src/Creature.cpp.s
+
 src/main.o: src/main.cpp.o
 .PHONY : src/main.o
 
@@ -162,6 +186,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... RenzoSimCore"
+	@echo "... src/Creature.o"
+	@echo "... src/Creature.i"
+	@echo "... src/Creature.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

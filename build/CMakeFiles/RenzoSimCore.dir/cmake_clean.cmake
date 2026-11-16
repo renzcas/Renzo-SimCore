@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/RenzoSimCore.dir/src/Creature.cpp.o"
+  "CMakeFiles/RenzoSimCore.dir/src/Creature.cpp.o.d"
   "CMakeFiles/RenzoSimCore.dir/src/main.cpp.o"
   "CMakeFiles/RenzoSimCore.dir/src/main.cpp.o.d"
   "RenzoSimCore"
