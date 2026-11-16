@@ -1,18 +1,31 @@
 #include <iostream>
+
 #include "Creature.h"
+#include "World.h"
 
 int main()
 {
+    World world;
+
     Creature wolf;
+    Creature rabbit;
+    Creature bear;
 
-    for(int i = 0; i < 5; i++)
+    world.AddCreature(wolf);
+    world.AddCreature(rabbit);
+    world.AddCreature(bear);
+
+    for(int tick = 0; tick < 5; tick++)
     {
-        wolf.Update();
-
         std::cout
-            << "Age: " << wolf.age
-            << " Energy: " << wolf.energy
+            << "\n=== Tick "
+            << tick
+            << " ==="
             << std::endl;
+
+        world.Update();
+
+        world.PrintStats();
     }
 
     return 0;
