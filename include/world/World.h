@@ -1,19 +1,25 @@
 #pragma once
+#include "core/Entity.h"
+#include "simcore/Signal.h"
+#include "simcore/SignalBus.h"
 #include <vector>
 #include <memory>
-#include "core/Entity.h"
 
 class World {
 private:
     int width;
     int height;
     std::vector<std::shared_ptr<Entity>> entities;
+    SignalBus signalBus;
 
 public:
-    World();
-    World(int width, int height);
+    World(int w, int h);
 
     void addEntity(std::shared_ptr<Entity> entity);
-    size_t getEntityCount() const;
-    void update(double dt = 0.016);
+    void emitSignal(const Signal& sig);
+    void update(double dt);
+
+    int getWidth() const noexcept;
+    int getHeight() const noexcept;
+    size_t getEntityCount() const noexcept;
 };
