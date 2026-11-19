@@ -30,6 +30,15 @@ void World::update(double dt) {
     for (auto& entity : entities) {
         entity->update(dt);
     }
+
+    // 3. Flush agent actions back onto the SignalBus for the next tick
+    for (auto& entity : entities) {
+        if (auto* agent = dynamic_cast<Agent*>(entity.get())) {
+            for (const auto& action : agent->flushActions()) {
+                signalBus.publish(action);
+            }
+        }
+    }
 }
 
 int World::getWidth() const noexcept {
