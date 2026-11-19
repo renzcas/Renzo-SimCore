@@ -26,6 +26,10 @@ bool Agent::isGoalSatisfied() const {
     return active_goal->isSatisfied(beliefs);
 }
 
+void Agent::addActionRule(const ActionRule& rule) {
+    action_rules.push_back(rule);
+}
+
 const std::vector<Signal>& Agent::getMemory() const {
     return short_term_memory;
 }
@@ -37,15 +41,12 @@ std::vector<Signal> Agent::flushActions() {
 }
 
 void Agent::update(double dt) {
-    // 1. Process inbox through attention filter
     for (const auto& sig : inbox) {
         if (sig.strength < attention_threshold) {
             continue;
         }
-
         double current = getBelief(sig.type);
         setBelief(sig.type, current + (sig.strength * dt));
-
         short_term_memory.push_back(sig);
         if (short_term_memory.size() > memory_capacity) {
             short_term_memory.erase(short_term_memory.begin());
@@ -53,13 +54,20 @@ void Agent::update(double dt) {
     }
     inbox.clear();
 
-    // 2. Apply belief decay over time (dt)
     for (auto& [key, val] : beliefs) {
         val = std::max(0.0, val - (decay_rate * dt));
     }
 
-    // 3. Trigger action if threat is high
     if (getBelief("threat") > 0.8) {
         pending_actions.push_back({getId(), "alert", getBelief("threat")});
+    }
+
+    if (active_goal) {
+        bool satisfied = isGoalSatisfied();
+        for (const auto& rule : action_rules) {
+            if (rule.trigger_when_satisfied == satisfied) {
+                pending_actions.push_back({getId(), rule.action_type, rule.strength});
+            }
+        }
     }
 }
