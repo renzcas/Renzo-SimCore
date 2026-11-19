@@ -21,6 +21,14 @@ void Agent::setBelief(const std::string& key, double value) {
     beliefs[key] = std::clamp(value, 0.0, 1.0);
 }
 
+double Agent::getResilience() const {
+    double trust = getBelief("trust");
+    double calm = getBelief("calm");
+    double fear = getBelief("fear");
+    double panic = getBelief("panic");
+    return std::clamp(trust + calm - fear - panic, 0.0, 1.0);
+}
+
 void Agent::addBeliefLink(const BeliefLink& link) {
     belief_links.push_back(link);
 }

@@ -25,6 +25,7 @@ public:
     void receiveSignal(const Signal& sig);
     double getBelief(const std::string& key) const;
     void setBelief(const std::string& key, double value);
+    double getResilience() const;
     void addBeliefLink(const BeliefLink& link);
 
     void setGoal(const Goal& goal);

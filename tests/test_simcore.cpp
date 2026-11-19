@@ -44,6 +44,7 @@ int main() {
     assert(agent->getBelief("fear") >= 0.0 && agent->getBelief("fear") <= 1.0);
     assert(agent->getBelief("panic") >= 0.0 && agent->getBelief("panic") <= 1.0);
     assert(agent->getBelief("calm") >= 0.0 && agent->getBelief("calm") <= 1.0);
+    assert(agent->getResilience() >= 0.0 && agent->getResilience() <= 1.0);
     double panic_with_trust = agent->getBelief("panic");
 
     auto baseline = std::make_shared<Agent>(11, "Baseline", 0.1, 0.0, 5);
@@ -53,7 +54,9 @@ int main() {
     baseline->update(1.0);
     assert(baseline->getBelief("fear") >= 0.0 && baseline->getBelief("fear") <= 1.0);
     assert(baseline->getBelief("panic") >= 0.0 && baseline->getBelief("panic") <= 1.0);
+    assert(baseline->getResilience() >= 0.0 && baseline->getResilience() <= 1.0);
     assert(panic_with_trust < baseline->getBelief("panic"));
+    assert(agent->getResilience() > baseline->getResilience());
 
     std::cout << "All SimCore Tests Passed!" << std::endl;
     return 0;
