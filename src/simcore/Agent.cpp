@@ -21,6 +21,10 @@ void Agent::setBelief(const std::string& key, double value) {
     beliefs[key] = std::clamp(value, 0.0, 1.0);
 }
 
+void Agent::addBeliefLink(const BeliefLink& link) {
+    belief_links.push_back(link);
+}
+
 void Agent::setGoal(const Goal& goal) {
     active_goal = goal;
 }
@@ -60,6 +64,14 @@ void Agent::update(double dt) {
 
     for (auto& [key, val] : beliefs) {
         val = std::max(0.0, val - (decay_rate * dt));
+    }
+
+    for (const auto& link : belief_links) {
+        double src_val = getBelief(link.source);
+        if (src_val > 0.0) {
+            double propagated = src_val * link.weight * dt;
+            setBelief(link.target, getBelief(link.target) + propagated);
+        }
     }
 
     if (getBelief("threat") > 0.8) {

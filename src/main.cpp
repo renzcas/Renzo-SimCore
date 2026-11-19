@@ -6,9 +6,10 @@
 #include "simcore/Signal.h"
 #include "simcore/Goal.h"
 #include "simcore/Action.h"
+#include "simcore/BeliefLink.h"
 
 int main() {
-    std::cout << "=== Renzo-SimCore 5-Agent Society (50 Ticks) ===" << std::endl;
+    std::cout << "=== Renzo-SimCore 5-Agent Belief Network (50 Ticks) ===" << std::endl;
     World world(800, 600);
 
     auto scout    = std::make_shared<Agent>(2, "Scout",    0.15, 0.10, 12, AgentRole::Scout);
@@ -17,9 +18,14 @@ int main() {
     auto trickster= std::make_shared<Agent>(5, "Trickster",0.20, 0.10, 12, AgentRole::Trickster);
     auto citizen  = std::make_shared<Agent>(6, "Citizen",  0.20, 0.10, 12, AgentRole::Citizen);
 
+    for (const auto& agent : {scout, sentinel, keeper, trickster, citizen}) {
+        agent->addBeliefLink({"threat", "fear", 0.7});
+        agent->addBeliefLink({"fear", "panic", 0.5});
+    }
+
     scout->setGoal({"Secure Perimeter", {{"threat", 0.5}}});
     scout->addActionRule({"perimeter_locked", 0.9, true});
-    citizen->setGoal({"Stay Safe", {{"threat", 0.4}}});
+    citizen->setGoal({"Stay Safe", {{"panic", 0.3}}});
     citizen->addActionRule({"seek_shelter", 0.8, true});
 
     world.addEntity(scout);
@@ -36,7 +42,8 @@ int main() {
         auto printAgent = [](const char* roleName, const std::shared_ptr<Agent>& a) {
             std::cout << std::left << std::setw(10) << roleName
                       << " threat=" << std::fixed << std::setprecision(2) << a->getBelief("threat")
-                      << " noise=" << a->getBelief("noise")
+                      << " fear=" << a->getBelief("fear")
+                      << " panic=" << a->getBelief("panic")
                       << " | Goal=" << (a->isGoalSatisfied() ? "SATISFIED  " : "UNSATISFIED")
                       << " | Mem=" << a->getMemory().size() << std::endl;
         };
@@ -47,6 +54,6 @@ int main() {
         printAgent("Citizen", citizen);
     }
 
-    std::cout << "=== 50-Tick Society Complete ===" << std::endl;
+    std::cout << "=== 50-Tick Belief Network Complete ===" << std::endl;
     return 0;
 }

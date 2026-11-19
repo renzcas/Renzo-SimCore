@@ -3,6 +3,7 @@
 #include "simcore/Signal.h"
 #include "simcore/Goal.h"
 #include "simcore/Action.h"
+#include "simcore/BeliefLink.h"
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -24,6 +25,7 @@ public:
     void receiveSignal(const Signal& sig);
     double getBelief(const std::string& key) const;
     void setBelief(const std::string& key, double value);
+    void addBeliefLink(const BeliefLink& link);
 
     void setGoal(const Goal& goal);
     bool isGoalSatisfied() const;
@@ -43,6 +45,7 @@ private:
     std::vector<Signal> inbox;
     std::vector<Signal> short_term_memory;
     std::unordered_map<std::string, double> beliefs;
+    std::vector<BeliefLink> belief_links;
     std::optional<Goal> active_goal;
     std::vector<ActionRule> action_rules;
     std::vector<Signal> pending_actions;
