@@ -1,8 +1,12 @@
 #include "simcore/Agent.h"
 #include <algorithm>
 
-Agent::Agent(uint64_t id, const std::string& name, double attention_threshold, double decay_rate, size_t memory_capacity)
-    : Entity(id, name), attention_threshold(attention_threshold), decay_rate(decay_rate), memory_capacity(memory_capacity) {}
+Agent::Agent(uint64_t id, const std::string& name, double attention_threshold, double decay_rate, size_t memory_capacity, AgentRole role)
+    : Entity(id, name), role(role), attention_threshold(attention_threshold), decay_rate(decay_rate), memory_capacity(memory_capacity) {}
+
+AgentRole Agent::getRole() const noexcept {
+    return role;
+}
 
 void Agent::receiveSignal(const Signal& sig) {
     inbox.push_back(sig);
@@ -60,6 +64,28 @@ void Agent::update(double dt) {
 
     if (getBelief("threat") > 0.8) {
         pending_actions.push_back({getId(), "alert", getBelief("threat")});
+    }
+
+    switch (role) {
+        case AgentRole::Scout:
+            if (getBelief("threat") > 0.3) {
+                pending_actions.push_back({getId(), "scout_report", getBelief("threat")});
+            }
+            break;
+        case AgentRole::Keeper:
+            if (getBelief("threat") > 0.25) {
+                pending_actions.push_back({getId(), "verified_status", 0.5});
+            }
+            break;
+        case AgentRole::Trickster:
+            if (getBelief("threat") > 0.4 || getBelief("noise") > 0.2) {
+                pending_actions.push_back({getId(), "noise", 0.65});
+            }
+            break;
+        case AgentRole::Sentinel:
+        case AgentRole::Citizen:
+        default:
+            break;
     }
 
     if (active_goal) {

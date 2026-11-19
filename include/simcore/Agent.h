@@ -8,10 +8,19 @@
 #include <unordered_map>
 #include <vector>
 
+enum class AgentRole {
+    Scout,
+    Sentinel,
+    Keeper,
+    Trickster,
+    Citizen
+};
+
 class Agent : public Entity {
 public:
-    Agent(uint64_t id, const std::string& name, double attention_threshold, double decay_rate, size_t memory_capacity);
+    Agent(uint64_t id, const std::string& name, double attention_threshold, double decay_rate, size_t memory_capacity, AgentRole role = AgentRole::Citizen);
 
+    AgentRole getRole() const noexcept;
     void receiveSignal(const Signal& sig);
     double getBelief(const std::string& key) const;
     void setBelief(const std::string& key, double value);
@@ -26,6 +35,7 @@ public:
     void update(double dt) override;
 
 private:
+    AgentRole role;
     double attention_threshold;
     double decay_rate;
     size_t memory_capacity;
