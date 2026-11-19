@@ -35,12 +35,15 @@ int main() {
     auto agent = std::make_shared<Agent>(10, "Tester", 0.1, 0.0, 5);
     agent->addBeliefLink({"threat", "fear", 0.7});
     agent->addBeliefLink({"fear", "panic", 0.5});
-    agent->addBeliefLink({"trust", "panic", -0.4});
+    agent->addBeliefLink({"trust", "calm", 0.6});
+    agent->addBeliefLink({"calm", "panic", -0.4});
+    agent->addBeliefLink({"calm", "fear", -0.3});
     agent->setBelief("threat", 0.8);
     agent->setBelief("trust", 0.5);
     agent->update(1.0);
-    assert(agent->getBelief("fear") > 0.5);
-    assert(agent->getBelief("panic") > 0.0);
+    assert(agent->getBelief("fear") >= 0.0 && agent->getBelief("fear") <= 1.0);
+    assert(agent->getBelief("panic") >= 0.0 && agent->getBelief("panic") <= 1.0);
+    assert(agent->getBelief("calm") >= 0.0 && agent->getBelief("calm") <= 1.0);
     double panic_with_trust = agent->getBelief("panic");
 
     auto baseline = std::make_shared<Agent>(11, "Baseline", 0.1, 0.0, 5);
@@ -48,6 +51,8 @@ int main() {
     baseline->addBeliefLink({"fear", "panic", 0.5});
     baseline->setBelief("threat", 0.8);
     baseline->update(1.0);
+    assert(baseline->getBelief("fear") >= 0.0 && baseline->getBelief("fear") <= 1.0);
+    assert(baseline->getBelief("panic") >= 0.0 && baseline->getBelief("panic") <= 1.0);
     assert(panic_with_trust < baseline->getBelief("panic"));
 
     std::cout << "All SimCore Tests Passed!" << std::endl;

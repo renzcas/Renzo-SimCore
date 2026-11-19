@@ -9,7 +9,7 @@
 #include "simcore/BeliefLink.h"
 
 int main() {
-    std::cout << "=== Renzo-SimCore 5-Agent Belief Network (50 Ticks) ===" << std::endl;
+    std::cout << "=== Renzo-SimCore 5-Agent Balance of Forces (50 Ticks) ===" << std::endl;
     World world(800, 600);
 
     auto scout    = std::make_shared<Agent>(2, "Scout",    0.15, 0.10, 12, AgentRole::Scout);
@@ -21,7 +21,13 @@ int main() {
     for (const auto& agent : {scout, sentinel, keeper, trickster, citizen}) {
         agent->addBeliefLink({"threat", "fear", 0.7});
         agent->addBeliefLink({"fear", "panic", 0.5});
+        agent->addBeliefLink({"trust", "calm", 0.6});
+        agent->addBeliefLink({"calm", "fear", -0.3});
+        agent->addBeliefLink({"calm", "panic", -0.4});
     }
+
+    keeper->setBelief("trust", 0.8);
+    citizen->setBelief("trust", 0.5);
 
     scout->setGoal({"Secure Perimeter", {{"threat", 0.5}}});
     scout->addActionRule({"perimeter_locked", 0.9, true});
@@ -44,6 +50,7 @@ int main() {
                       << " threat=" << std::fixed << std::setprecision(2) << a->getBelief("threat")
                       << " fear=" << a->getBelief("fear")
                       << " panic=" << a->getBelief("panic")
+                      << " calm=" << a->getBelief("calm")
                       << " | Goal=" << (a->isGoalSatisfied() ? "SATISFIED  " : "UNSATISFIED")
                       << " | Mem=" << a->getMemory().size() << std::endl;
         };
@@ -54,6 +61,6 @@ int main() {
         printAgent("Citizen", citizen);
     }
 
-    std::cout << "=== 50-Tick Belief Network Complete ===" << std::endl;
+    std::cout << "=== 50-Tick Balance of Forces Complete ===" << std::endl;
     return 0;
 }
