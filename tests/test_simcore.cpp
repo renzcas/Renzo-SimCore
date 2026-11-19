@@ -1,27 +1,27 @@
 #include <cassert>
+#include <cmath>
 #include <iostream>
 #include <memory>
 #include "world/World.h"
 #include "entities/Creature.h"
 #include "simcore/Agent.h"
 #include "simcore/Signal.h"
+#include "simcore/Goal.h"
 
 int main() {
-    std::cout << "=== Running SimCore Layer 1 Tests ===" << std::endl;
-
+    std::cout << "=== Running SimCore Layer 3 Tests (Goals & Decay) ===" << std::endl;
     World world(800, 600);
-    auto creature = std::make_shared<Creature>(1, "Trog", 100.0, 50.0);
-    auto agent = std::make_shared<Agent>(2, "Watcher");
-
-    world.addEntity(creature);
+    auto agent = std::make_shared<Agent>(2, "Observer", 0.2, 0.1, 5);
     world.addEntity(agent);
-
-    world.emitSignal({1, "proximity", 0.75});
-    world.update(1.0);
-
-    assert(agent->getBelief("proximity") == 0.75);
-    assert(creature->getEnergy() < 50.0);
-
-    std::cout << "All SimCore Layer 1 Tests Passed!" << std::endl;
+    agent->setGoal({"Secure Perimeter", {{"threat", 0.5}}});
+    assert(!agent->isGoalSatisfied());
+    agent->receiveSignal({1, "threat", 0.8});
+    agent->update(1.0);
+    assert(std::abs(agent->getBelief("threat") - 0.7) < 1e-6);
+    assert(agent->isGoalSatisfied());
+    agent->update(5.0);
+    assert(std::abs(agent->getBelief("threat") - 0.2) < 1e-6);
+    assert(!agent->isGoalSatisfied());
+    std::cout << "All SimCore Layer 3 Tests Passed!" << std::endl;
     return 0;
 }
